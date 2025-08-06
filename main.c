@@ -1,13 +1,24 @@
-#include <stdio.h>
-#include <readline/readline.h>
-#include <stdlib.h>
-#include <readline/history.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/06 16:59:23 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/08/06 19:15:03 by jbellucc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int main(void)
+int main(int argc, char **argv, char **envp)
 {
-    char *prompt;
-
+    char *prompt = "ciao";
+    t_heart heart;
+    init_heart(&heart, envp);
+    (void) argc;
+    (void) argv;
     while (1)
     {
         prompt = readline("<sushell ");
@@ -25,7 +36,7 @@ int main(void)
             free(prompt);
             return 0;
         }
-
+        heart.input_line = prompt;
         printf("Questo è il tuo comando %s \n", prompt);
         add_history(prompt);
         free(prompt);

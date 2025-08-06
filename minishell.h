@@ -3,22 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: je <je@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/08/05 17:17:47 by je               ###   ########.fr       */
+/*   Updated: 2025/08/06 19:13:07 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft.h"
+# include "./libft/libft.h"
 # include <stdbool.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
+typedef struct s_heart  t_heart;
 extern int g_exit; // salva lo stato di uscita dell’ultimo comando
 
 typedef struct s_comand
@@ -52,5 +55,7 @@ typedef struct s_heart
 	int			stdout_backup;	// Salva lo standard output (schermo)
 } t_heart;
 
->>>>>>> ec26fab52b92be7176f9084561904768666466fa
+void	init_heart(t_heart *heart, char **envp);
+char **init_envp(char **envp);
+int arraylen(char **array);
 #endif

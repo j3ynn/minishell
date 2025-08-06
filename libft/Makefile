@@ -3,15 +3,15 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jbellucc <jbellucc@student.42roma.it>      +#+  +:+       +#+         #
+#    By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/23 15:35:07 by jbellucc          #+#    #+#              #
-#    Updated: 2024/12/27 14:48:11 by je               ###   ########.fr        #
+#    Updated: 2025/08/06 17:04:52 by jbellucc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
-CC = cc
+CC = gcc
 AR = ar rcs
 RM = rm -f
 CFLAGS = -Wall -Werror -Wextra
