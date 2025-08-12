@@ -1,7 +1,9 @@
 NAME = minishell
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-SRCS = $(wildcard *.c)
+SRCS = $(wildcard *.c) \
+		$(wildcard tokanize/*.c) \
+		$(wildcard memory/*.c)
 OBJS = $(SRCS:.c=.o)
 PATH_LIBFT = libft
 LIB_LIBFT = libft/libft.a

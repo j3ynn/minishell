@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: je <je@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/08/06 19:13:07 by jbellucc         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:47:59 by je               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,22 @@ typedef struct s_heart
 } t_heart;
 
 void	init_heart(t_heart *heart, char **envp);
-char **init_envp(char **envp);
-int arraylen(char **array);
+void	init_heredoc(t_heart *heart);
+void	init_pipes(t_heart *heart);
+void	init_stdin_stdout(t_heart *heart);
+void	init_comand(t_heart *heart, int num_commands);
+void	free_single_command(t_comand *cmd);
+void	free_commands(t_heart *heart);
+void	free_tokens(char **tokens);
+void	skip_whitespace(char *str);
+
+char	**init_envp(char **envp);
+
+int		arraylen(char **array);
+int		count_pipes(char *str);
+int		count_args(char **tokens);
+int		ft_strcmp(const char *s1, const char *s2);
+int		handle_quotes(char *str);
+char	**add_token(char **tokens, const char *token);
+
 #endif
