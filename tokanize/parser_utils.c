@@ -1,5 +1,11 @@
 #include "../minishell.h"
 
+int	redirection(char *token)
+{
+	return (ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0 ||
+			ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0);
+}
+
 char	**pipes_split(char *input, int num_cmds)
 {
 	char	**cmd_separ;
@@ -51,44 +57,41 @@ void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)
 	(*j)++;
 }
 
-int	redirection(char *token)
+void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)
 {
-	return (ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0 ||
-			ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0);
-}
+	int	j;
+	int	arg_idx;
 
-void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index)
-{
-	char **tokens;
-	t_comand *cmd;
-	int j;
-	int arg_idx;
-
-	tokens = process_input(cmd_str);
-	cmd = &heart->comds[cmd_index];
 	j = 0;
 	arg_idx = 0;
-	cmd->heart = heart;
 	cmd->num_arg = count_args(tokens);
 	cmd->args = malloc(sizeof(char *) * (cmd->num_arg + 1));
-	cmd->input_file = NULL;
-	cmd->output_file = NULL;
-	cmd->redirection = false;
+	if (!cmd->args)
+		return ;
 	while (tokens[j])
 	{
 		if (redirection(tokens[j]))
-		{
 			handle_redirections(cmd, tokens, &j, heart);
-		}
 		else
 		{
 			if (arg_idx == 0)
 				cmd->comd = ft_strdup(tokens[j]);
-			cmd->args[arg_idx] = ft_strdup(tokens[j]);
-			arg_idx++;
+			cmd->args[arg_idx++] = ft_strdup(tokens[j]);
 		}
 		j++;
 	}
 	cmd->args[arg_idx] = NULL;
+}
+
+void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index)
+{
+	char		**tokens;
+	t_comand	*cmd;
+
+	tokens = process_input(cmd_str);
+	if (!tokens)
+		return ;
+	cmd = &heart->comds[cmd_index];
+	setup_command(cmd, tokens, heart);
 	free_tokens(tokens);
 }

@@ -6,7 +6,7 @@
 /*   By: je <je@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/08/30 16:19:27 by je               ###   ########.fr       */
+/*   Updated: 2025/09/01 15:45:48 by je               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	free_single_command(t_comand *cmd);
 void	free_commands(t_heart *heart);
 void	free_tokens(char **tokens);
 void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart);
+void	setup_command(t_comand *cmd, char **tokens, t_heart *heart);
 void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index);
 
 char	**init_envp(char **envp);
