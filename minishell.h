@@ -6,7 +6,7 @@
 /*   By: je <je@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/08/12 18:47:59 by je               ###   ########.fr       */
+/*   Updated: 2025/08/30 16:19:27 by je               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,25 @@ void	init_comand(t_heart *heart, int num_commands);
 void	free_single_command(t_comand *cmd);
 void	free_commands(t_heart *heart);
 void	free_tokens(char **tokens);
-void	skip_whitespace(char *str);
+void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart);
+void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index);
 
 char	**init_envp(char **envp);
+char	**add_token(char **tokens, const char *token);
+char	*get_word(char *str, int start);
+char	**process_input(char *input);
+char	**pipes_split(char *input, int num_cmds);
 
 int		arraylen(char **array);
 int		count_pipes(char *str);
 int		count_args(char **tokens);
 int		ft_strcmp(const char *s1, const char *s2);
 int		handle_quotes(char *str);
-char	**add_token(char **tokens, const char *token);
+int		skip_whitespace(char *str);
+int		get_quoted_len(char *str, int start);
+int		get_operator_len(char *str, int start);
+int		get_normal_len(char *str, int start);
+int		get_manage(char *str, int start);
+int		redirection(char *token);
 
 #endif
