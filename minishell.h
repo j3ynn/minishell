@@ -6,7 +6,7 @@
 /*   By: je <je@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/09/01 15:45:48 by je               ###   ########.fr       */
+/*   Updated: 2025/09/02 14:59:24 by je               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,6 @@ int		get_operator_len(char *str, int start);
 int		get_normal_len(char *str, int start);
 int		get_manage(char *str, int start);
 int		redirection(char *token);
+int		parse_input(t_heart *heart, char *input);
 
 #endif

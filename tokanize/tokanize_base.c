@@ -44,7 +44,7 @@ char	**add_token(char **tokens, const char *token)
 	}
 	while (j < i)
 	{
-		new_tokens[j] = tokens[j];
+		new_tokens[j] = ft_strdup(tokens[j]);
 		j ++;
 	}
 	new_tokens[i] = ft_strdup(token);

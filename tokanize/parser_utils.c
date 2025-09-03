@@ -54,7 +54,7 @@ void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)
 		ft_strlcpy(heart->heredoc.delimiter, tokens[*j + 1], 250);
 		cmd->input_file = ft_strdup("HEREDOC");
 	}
-	(*j)++;
+	(*j) += 2;
 }
 
 void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)
@@ -65,6 +65,8 @@ void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)
 	j = 0;
 	arg_idx = 0;
 	cmd->num_arg = count_args(tokens);
+	if (cmd->num_arg == 0)
+		return;
 	cmd->args = malloc(sizeof(char *) * (cmd->num_arg + 1));
 	if (!cmd->args)
 		return ;
@@ -77,8 +79,8 @@ void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)
 			if (arg_idx == 0)
 				cmd->comd = ft_strdup(tokens[j]);
 			cmd->args[arg_idx++] = ft_strdup(tokens[j]);
+			j++;
 		}
-		j++;
 	}
 	cmd->args[arg_idx] = NULL;
 }
@@ -89,9 +91,35 @@ void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index)
 	t_comand	*cmd;
 
 	tokens = process_input(cmd_str);
-	if (!tokens)
+	if (!tokens || !tokens[0])
 		return ;
 	cmd = &heart->comds[cmd_index];
 	setup_command(cmd, tokens, heart);
 	free_tokens(tokens);
+}
+
+int	parse_input(t_heart *heart, char *input)
+{
+	char	**cmd_strs;
+	int		i;
+
+	if (!input || !*input)
+		return (-1);
+	heart->num_comds = count_pipes(input);
+	heart->has_pipes = (heart->num_comds > 1);
+	heart->input_line = ft_strdup(input);
+	init_comand(heart, heart->num_comds);
+	cmd_strs = pipes_split(input, heart->num_comds);
+	if (!cmd_strs)
+		return (-1);
+	i = 0;
+	while (i < heart->num_comds)
+	{
+		create_single_command(heart, cmd_strs[i], i);
+		i++;
+	}
+	if (heart->has_pipes)
+		init_pipes(heart);
+	free_tokens(cmd_strs);
+	return (0);
 }
