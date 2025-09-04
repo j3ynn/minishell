@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
-int	handle_quotes(char *str)
-{
+int	handle_quotes(char *str)	//salta le stringhe chiuse tra virgolette (",')
+{									//tipo se abbiamo pipe tra virgolette non le cosidera
 	char	quote;
 
 	int i = 0;
@@ -19,7 +19,7 @@ int	handle_quotes(char *str)
 	return (0);
 }
 
-int	skip_whitespace(char *str)
+int	skip_whitespace(char *str)	//salta tutti gli spazzi e tab in più nella stringa
 {
 	int i = 0;
 
@@ -53,8 +53,8 @@ char	**add_token(char **tokens, const char *token)
 	return (new_tokens);
 }
 
-char	*get_word(char *str, int start)
-{
+char	*get_word(char *str, int start)	//estrae una parola o un token dalla stringa di input
+{											//tutte le funzioni che ho richiamato stanno in tokanize_utils
 	int		len;
 	int		i;
 	char	*word;
@@ -73,7 +73,7 @@ char	*get_word(char *str, int start)
 	return (word);
 }
 
-char	**process_input(char *input)
+char	**process_input(char *input)	//prende l'input e lo spezza in token
 {
 	char	**tokens;
 	char	*word;

@@ -6,8 +6,8 @@ int	redirection(char *token)
 			ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0);
 }
 
-char	**pipes_split(char *input, int num_cmds)
-{
+char	**pipes_split(char *input, int num_cmds)	//lavora nell input e se ci sono comandi separati da pipe li spezza
+{														//in un array di stringhe ed ogniuna conterrà un singolo comando suca
 	char	**cmd_separ;
 	int		cmd_idx;
 	int		start;
@@ -33,7 +33,7 @@ char	**pipes_split(char *input, int num_cmds)
 	return (cmd_separ);
 }
 
-void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)
+void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)	//da effetivamente un valore ai simboli di redirezione
 {
 	if (!tokens[*j + 1])
 		return;
@@ -57,9 +57,9 @@ void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)
 	(*j) += 2;
 }
 
-void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)
-{
-	int	j;
+void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)	//prepara la struttura cmd a poter eseguire un comando
+{																		//estrae in comando, estrae gli argomenti, gestisce le redirezioni
+	int	j;																	//salva tutto dentroa t_comand
 	int	arg_idx;
 
 	j = 0;
@@ -85,8 +85,8 @@ void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)
 	cmd->args[arg_idx] = NULL;
 }
 
-void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index)
-{
+void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index)	//prepara un singolo comando prima di eseguirlo
+{																				//ES capisce cosa vuoi fare, segna tutto e in fine esegue
 	char		**tokens;
 	t_comand	*cmd;
 
@@ -98,7 +98,7 @@ void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index)
 	free_tokens(tokens);
 }
 
-int	parse_input(t_heart *heart, char *input)
+int	parse_input(t_heart *heart, char *input)	//analizza tutto l'input, divide in più comandi, gestisce le pipe e analizza le strutture
 {
 	char	**cmd_strs;
 	int		i;

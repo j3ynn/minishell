@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int	count_args(char **tokens)
+int	count_args(char **tokens)	//conta solo gli argomenti veri, escludendo redirezioni
 {
 	int	i;
 	int	count;
@@ -25,8 +25,8 @@ int	count_args(char **tokens)
 	}
 	return (count);
 }
-int	count_pipes(char *str)
-{
+int	count_pipes(char *str)	//conta le pipe, ingnora quelle tra virgolette e	ES se ci sono 2 pipe
+{								//restituisce il numero totale di comandi			il numero degli argomenti è 3
 	int		i = 0;
 	int		count_pipes_out = 0;
 	bool	in_quotes = false;
