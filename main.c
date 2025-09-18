@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: je <je@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:59:23 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/08/12 16:28:10 by je               ###   ########.fr       */
+/*   Updated: 2025/09/18 19:32:30 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_heart(&heart, envp);
-	printf("fin qui ci sono");
 	while (1)
 	{
 		line = readline("minishell$ ");	
-		printf("fin qui ci sono");
 		if (!line)
 			break ;
-		printf("fin qui ci sono");
 		if (parse_input(&heart, line) == 0)
 			execute_commands(&heart);
 		free_commands(&heart);

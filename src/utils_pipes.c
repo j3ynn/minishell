@@ -10,6 +10,7 @@ void	init_pipes(t_heart *heart)
 		heart->pipes = NULL;
 		return ;
 	}
+	
 	heart->pipes = malloc(sizeof(int *) * (heart->num_comds - 1));
 	if (!heart->pipes)
 	{
