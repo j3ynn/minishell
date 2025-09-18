@@ -20,6 +20,10 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
+# include <errno.h>
+# include <fcntl.h>
+
 
 typedef struct s_heart  t_heart;
 extern int g_exit; // salva lo stato di uscita dell’ultimo comando
@@ -66,13 +70,11 @@ void	free_tokens(char **tokens);
 void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart);
 void	setup_command(t_comand *cmd, char **tokens, t_heart *heart);
 void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index);
-
 char	**init_envp(char **envp);
 char	**add_token(char **tokens, const char *token);
 char	*get_word(char *str, int start);
 char	**process_input(char *input);
 char	**pipes_split(char *input, int num_cmds);
-
 int		arraylen(char **array);
 int		count_pipes(char *str);
 int		count_args(char **tokens);
@@ -85,5 +87,20 @@ int		get_normal_len(char *str, int start);
 int		get_manage(char *str, int start);
 int		redirection(char *token);
 int		parse_input(t_heart *heart, char *input);
+int		execute_commands(t_heart *heart);
+void	wait_all(pid_t *pids, int n);
+char	*get_path(char *cmd, char **env);
+void	run_builtin_child(t_comand *cmd, t_heart *heart);
+int		is_child_builtin(const char *cmd);
+void	run_builtin_parent(t_comand *cmd, t_heart *heart);
+int		is_parent_builtin(const char *cmd);
+int		open_output_file(t_comand *cmd);
+int		open_input_file(t_comand *cmd, t_heart *heart);
+void	cleanup_heredoc(t_heart *heart);
+int		create_heredoc(t_heart *heart);
+void	close_all_pipes_child(t_heart *heart);
+void	free_pipes(t_heart *heart);
+void	init_pipes(t_heart *heart);
+void	free_tokens(char **tokens);
 
 #endif

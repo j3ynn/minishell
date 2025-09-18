@@ -3,7 +3,8 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 SRCS = $(wildcard *.c) \
 		$(wildcard tokanize/*.c) \
-		$(wildcard memory/*.c)
+		$(wildcard memory/*.c) \
+		$(wildcard src/*.c)
 OBJS = $(SRCS:.c=.o)
 PATH_LIBFT = libft
 LIB_LIBFT = libft/libft.a

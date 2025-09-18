@@ -12,36 +12,26 @@
 
 #include "minishell.h"
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	char *prompt = NULL;
-	t_heart heart;
+	t_heart	heart;
+	char	*line;
+
+	(void)argc;
+	(void)argv;
 	init_heart(&heart, envp);
-	(void) argc;
-	(void) argv;
+	printf("fin qui ci sono");
 	while (1)
 	{
-		prompt = readline("<sushell ");
-
-		if (prompt == NULL)
-			break;  // Esce dal ciclo se EOF o errore
-	if (prompt[0] == '\0')
-	{
-		free(prompt);
-		continue;
+		line = readline("minishell$ ");	
+		printf("fin qui ci sono");
+		if (!line)
+			break ;
+		printf("fin qui ci sono");
+		if (parse_input(&heart, line) == 0)
+			execute_commands(&heart);
+		free_commands(&heart);
+		free(line);
 	}
-		if (ft_strncmp(prompt, "exit", 4) == 0 && prompt[4] == '\0')
-		{
-			printf("Ciaone\n");
-			free(prompt);
-			return 0;
-		}
-		heart.input_line = prompt;
-		printf("Questo è il tuo comando %s \n", prompt);
-		add_history(prompt);
-		printf("handle_quotes = %d (dovrebbe essere 1)\n", handle_quotes(prompt));
-
-		free(prompt);
-	}
-	return 0;
+	return (0);
 }

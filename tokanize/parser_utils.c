@@ -120,6 +120,7 @@ int	parse_input(t_heart *heart, char *input)	//analizza tutto l'input, divide in
 	}
 	if (heart->has_pipes)
 		init_pipes(heart);
+	printf("Fin qui funziona");
 	free_tokens(cmd_strs);
 	return (0);
 }

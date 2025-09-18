@@ -40,7 +40,6 @@ int	arraylen(char **array)
 		return 0;
 	while (array[i] != NULL)
 		i++;
-	printf("il numero di variabili e' %d\n", i);
 	return i;
 }
 
@@ -65,11 +64,6 @@ char	**init_envp(char **envp){
 	}
 	new_env[i] = NULL;
 	return (new_env);
-}
-
-void	init_pipes(t_heart *heart)
-{
-	heart->pipes = NULL;
 }
 
 void	init_heredoc(t_heart *heart)
