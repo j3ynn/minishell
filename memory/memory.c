@@ -47,7 +47,10 @@ void	free_tokens(char **tokens)
 	if (!tokens)
 		return ;
 	while (tokens[i])
-		free(tokens[i++]);
+	{
+		free(tokens[i]);
+		i++;
+	}
 	free(tokens);
 }
 

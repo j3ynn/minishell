@@ -30,6 +30,7 @@ char	**pipes_split(char *input, int num_cmds)	//lavora nell input e se ci sono c
 		i++;
 	}
 	cmd_separ[cmd_idx] = ft_substr(input, start, i - start);
+	cmd_separ[cmd_idx+1] = NULL;
 	return (cmd_separ);
 }
 
@@ -119,8 +120,7 @@ int	parse_input(t_heart *heart, char *input)	//analizza tutto l'input, divide in
 		i++;
 	}
 	if (heart->has_pipes)
-		init_pipes(heart);
-	printf("Fin qui funziona");
+		init_pipes(heart);	
 	free_tokens(cmd_strs);
 	return (0);
 }

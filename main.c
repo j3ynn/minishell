@@ -20,14 +20,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_heart(&heart, envp);
-	printf("fin qui ci sono");
 	while (1)
 	{
 		line = readline("minishell$ ");	
-		printf("fin qui ci sono");
 		if (!line)
 			break ;
-		printf("fin qui ci sono");
 		if (parse_input(&heart, line) == 0)
 			execute_commands(&heart);
 		free_commands(&heart);
