@@ -1,25 +1,33 @@
 #include "../minishell.h"
 
-int	handle_quotes(char *str)	//salta le stringhe chiuse tra virgolette (",')
-{									//tipo se abbiamo pipe tra virgolette non le cosidera
+int	handle_quotes(char *str)	// Questa funzione controlla se ci sono virgolette aperte ma non chiuse correttamente nella stringa.
+{									//se le virgolette non sono chiuse correttamente il comando e' sbagliato
 	char	quote;
+	bool	in_quotes;
+	int 	i;
 
-	int i = 0;
-	quote = str[i];
-	(i)++;
+	i = 0;
+	in_quotes = false;
 	while (str[i])
 	{
-		if (str[i] == quote)
+		if (str[i] == '"' || str[i] == '\'')
 		{
-			(i)++;
-			return (1);
+			if (!in_quotes)
+			{
+				in_quotes = true;
+				quote = str[i];
+			}
+			else if(str[i] == quote)
+			{
+				in_quotes = false; 
+			}
 		}
-		(i)++;
+		i++;
 	}
-	return (0);
+	return (in_quotes);
 }
 
-int	skip_whitespace(char *str)	//salta tutti gli spazzi e tab in più nella stringa
+int	skip_whitespace(char *str)	//salta tutti gli spazi e tab in più nella stringa
 {
 	int i = 0;
 

@@ -25,6 +25,7 @@ int	count_args(char **tokens)	//conta solo gli argomenti veri, escludendo redire
 	}
 	return (count);
 }
+
 int	count_pipes(char *str)	//conta le pipe, ingnora quelle tra virgolette e	ES se ci sono 2 pipe
 {								//restituisce il numero totale di comandi			il numero degli argomenti è 3
 	int		i = 0;

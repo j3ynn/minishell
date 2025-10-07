@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: je <je@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/09/02 14:59:24 by je               ###   ########.fr       */
+/*   Updated: 2025/10/07 14:25:23 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <errno.h>
 # include <fcntl.h>
 
+#define MAX_VAR_LENGTH 256
 
 typedef struct s_heart  t_heart;
 extern int g_exit; // salva lo stato di uscita dell’ultimo comando

@@ -21,6 +21,8 @@ char	**pipes_split(char *input, int num_cmds)	//lavora nell input e se ci sono c
 		return (NULL);
 	while (input[i])
 	{
+		if (input[i] == '"' || input[i] == '\'')
+			i += get_quoted_len(input, i);
 		if (input[i] == '|')
 		{
 			cmd_separ[cmd_idx++] = ft_substr(input, start, i - start);
@@ -106,6 +108,8 @@ int	parse_input(t_heart *heart, char *input)	//analizza tutto l'input, divide in
 
 	if (!input || !*input)
 		return (-1);
+	if (handle_quotes(input))
+		return (-1);
 	heart->num_comds = count_pipes(input);
 	heart->has_pipes = (heart->num_comds > 1);
 	heart->input_line = ft_strdup(input);
@@ -119,8 +123,6 @@ int	parse_input(t_heart *heart, char *input)	//analizza tutto l'input, divide in
 		create_single_command(heart, cmd_strs[i], i);
 		i++;
 	}
-	if (heart->has_pipes)
-		init_pipes(heart);
 	free_tokens(cmd_strs);
 	return (0);
 }
