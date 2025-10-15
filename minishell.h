@@ -6,7 +6,7 @@
 /*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/10/07 14:25:23 by jbellucc         ###   ########.fr       */
+/*   Updated: 2025/10/15 17:18:58 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,36 +29,36 @@
 typedef struct s_heart  t_heart;
 extern int g_exit; // salva lo stato di uscita dell’ultimo comando
 
-typedef struct s_comand
-{
-	t_heart	*heart;			// Puntatore alla struttura principale
-	char	*comd;			// Nome del comando ("echo", "ls"...)
-	char	**args;			// Array di argomenti ["echo", "hello", NULL]
-	char	*input_file;	// File di input o "PIPE_IN"
-	char	*output_file;	// File di output o "PIPE_OUT"
-	bool	redirection;	// false = >, true = >>
-	int		num_arg;		// Numero di argomenti
-} t_comand;
+	typedef struct s_comand
+	{
+		t_heart	*heart;			// Puntatore alla struttura principale
+		char	*comd;			// Nome del comando ("echo", "ls"...)
+		char	**args;			// Array di argomenti ["echo", "hello", NULL]
+		char	*input_file;	// File di input o "PIPE_IN"
+		char	*output_file;	// File di output o "PIPE_OUT"
+		bool	redirection;	// false = >, true = >>
+		int		num_arg;		// Numero di argomenti
+	} t_comand;
 
-typedef struct s_heredoc
-{
-	char	delimiter[250];	// Delimitatore per heredoc
-	char	*content;		// Contenuto del heredoc
-	char	*temp_file;		// File temporaneo
-} t_heredoc;
+	typedef struct s_heredoc
+	{
+		char	delimiter[250];	// Delimitatore per heredoc
+		char	*content;		// Contenuto del heredoc
+		char	*temp_file;		// File temporaneo
+	} t_heredoc;
 
-typedef struct s_heart
-{
-	t_heredoc	heredoc;		// Gestione heredoc
-	t_comand	*comds;			// Array di comandi da eseguire
-	char		*input_line;	// Linea di input dell'utente(quella che leggi)
-	char		**env;			// Variabili d'ambiente per trovare i comandi
-	int			num_comds;		// Numero di comandi (separati da pipe)
-	int			**pipes;		// Matrix per le pipe (per collegare i comandi)
-	bool		has_pipes;		// se ci sono o no pipe (true ci sono)
-	int			stdin_backup;	// Salva lo standard input (tastiera)
-	int			stdout_backup;	// Salva lo standard output (schermo)
-} t_heart;
+	typedef struct s_heart
+	{
+		t_heredoc	heredoc;		// Gestione heredoc
+		t_comand	*comds;			// Array di comandi da eseguire
+		char		*input_line;	// Linea di input dell'utente(quella che leggi)
+		char		**env;			// Variabili d'ambiente per trovare i comandi
+		int			num_comds;		// Numero di comandi (separati da pipe)
+		int			**pipes;		// Matrix per le pipe (per collegare i comandi)
+		bool		has_pipes;		// se ci sono o no pipe (true ci sono)
+		int			stdin_backup;	// Salva lo standard input (tastiera)
+		int			stdout_backup;	// Salva lo standard output (schermo)
+	} t_heart;
 
 void	init_heart(t_heart *heart, char **envp);
 void	init_heredoc(t_heart *heart);
@@ -71,11 +71,26 @@ void	free_tokens(char **tokens);
 void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart);
 void	setup_command(t_comand *cmd, char **tokens, t_heart *heart);
 void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index);
+void	wait_all(pid_t *pids, int n);
+void	run_builtin_child(t_comand *cmd, t_heart *heart);
+void	run_builtin_parent(t_comand *cmd, t_heart *heart);
+void	cleanup_heredoc(t_heart *heart);
+void	close_all_pipes_child(t_heart *heart);
+void	free_pipes(t_heart *heart);
+void	init_pipes(t_heart *heart);
+void	free_tokens(char **tokens);
+void	expand_var(char *str, int *i, char *result, int *j);
+void	single_quote(char *str, int *i, char *result, int *j);
+void	double_quote(char *str, int *i, char *result, int *j);
+
 char	**init_envp(char **envp);
 char	**add_token(char **tokens, const char *token);
 char	*get_word(char *str, int start);
 char	**process_input(char *input);
 char	**pipes_split(char *input, int num_cmds);
+char	*get_path(char *cmd, char **env);
+char	*quote_menage(char *token);
+
 int		arraylen(char **array);
 int		count_pipes(char *str);
 int		count_args(char **tokens);
@@ -89,19 +104,10 @@ int		get_manage(char *str, int start);
 int		redirection(char *token);
 int		parse_input(t_heart *heart, char *input);
 int		execute_commands(t_heart *heart);
-void	wait_all(pid_t *pids, int n);
-char	*get_path(char *cmd, char **env);
-void	run_builtin_child(t_comand *cmd, t_heart *heart);
-int		is_child_builtin(const char *cmd);
-void	run_builtin_parent(t_comand *cmd, t_heart *heart);
+int		create_heredoc(t_heart *heart);
 int		is_parent_builtin(const char *cmd);
 int		open_output_file(t_comand *cmd);
 int		open_input_file(t_comand *cmd, t_heart *heart);
-void	cleanup_heredoc(t_heart *heart);
-int		create_heredoc(t_heart *heart);
-void	close_all_pipes_child(t_heart *heart);
-void	free_pipes(t_heart *heart);
-void	init_pipes(t_heart *heart);
-void	free_tokens(char **tokens);
+int		is_child_builtin(const char *cmd);
 
 #endif

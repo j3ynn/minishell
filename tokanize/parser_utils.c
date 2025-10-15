@@ -62,8 +62,9 @@ void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)	/
 
 void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)	//prepara la struttura cmd a poter eseguire un comando
 {																		//estrae in comando, estrae gli argomenti, gestisce le redirezioni
-	int	j;																	//salva tutto dentroa t_comand
-	int	arg_idx;
+	int		j;																	//salva tutto dentroa t_comand
+	int		arg_idx;
+	char	*quote;
 
 	j = 0;
 	arg_idx = 0;
@@ -79,9 +80,10 @@ void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)	//prepara la st
 			handle_redirections(cmd, tokens, &j, heart);
 		else
 		{
+			quote = quote_menage(tokens[j]);
 			if (arg_idx == 0)
-				cmd->comd = ft_strdup(tokens[j]);
-			cmd->args[arg_idx++] = ft_strdup(tokens[j]);
+				cmd->comd = ft_strdup(quote);
+			cmd->args[arg_idx++] = quote;
 			j++;
 		}
 	}
