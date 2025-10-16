@@ -21,6 +21,8 @@ char	**pipes_split(char *input, int num_cmds)	//lavora nell input e se ci sono c
 		return (NULL);
 	while (input[i])
 	{
+		if (input[i] == '"' || input[i] == '\'')
+			i += get_quoted_len(input, i);
 		if (input[i] == '|')
 		{
 			cmd_separ[cmd_idx++] = ft_substr(input, start, i - start);
@@ -60,8 +62,9 @@ void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)	/
 
 void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)	//prepara la struttura cmd a poter eseguire un comando
 {																		//estrae in comando, estrae gli argomenti, gestisce le redirezioni
-	int	j;																	//salva tutto dentroa t_comand
-	int	arg_idx;
+	int		j;																	//salva tutto dentroa t_comand
+	int		arg_idx;
+	char	*quote;
 
 	j = 0;
 	arg_idx = 0;
@@ -77,9 +80,10 @@ void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)	//prepara la st
 			handle_redirections(cmd, tokens, &j, heart);
 		else
 		{
+			quote = quote_menage(tokens[j]);
 			if (arg_idx == 0)
-				cmd->comd = ft_strdup(tokens[j]);
-			cmd->args[arg_idx++] = ft_strdup(tokens[j]);
+				cmd->comd = ft_strdup(quote);
+			cmd->args[arg_idx++] = quote;
 			j++;
 		}
 	}
@@ -106,6 +110,8 @@ int	parse_input(t_heart *heart, char *input)	//analizza tutto l'input, divide in
 
 	if (!input || !*input)
 		return (-1);
+	if (handle_quotes(input))
+		return (-1);
 	heart->num_comds = count_pipes(input);
 	heart->has_pipes = (heart->num_comds > 1);
 	heart->input_line = ft_strdup(input);
@@ -119,8 +125,6 @@ int	parse_input(t_heart *heart, char *input)	//analizza tutto l'input, divide in
 		create_single_command(heart, cmd_strs[i], i);
 		i++;
 	}
-	if (heart->has_pipes)
-		init_pipes(heart);	
 	free_tokens(cmd_strs);
 	return (0);
 }

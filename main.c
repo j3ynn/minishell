@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: je <je@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:59:23 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/08/12 16:28:10 by je               ###   ########.fr       */
+/*   Updated: 2025/10/07 16:46:07 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		if (parse_input(&heart, line) == 0)
 			execute_commands(&heart);
+		else
+			return(1);
 		free_commands(&heart);
 		free(line);
 	}
