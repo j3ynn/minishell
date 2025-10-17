@@ -6,7 +6,7 @@
 /*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/10/15 17:18:58 by jbellucc         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:07:25 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ void	free_single_command(t_comand *cmd);
 void	free_commands(t_heart *heart);
 void	free_tokens(char **tokens);
 void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart);
-void	setup_command(t_comand *cmd, char **tokens, t_heart *heart);
-void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index);
+void	setup_command(t_comand *cmd, char **tokens, t_heart *heart, char **env);
+void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index, char **env);
 void	wait_all(pid_t *pids, int n);
 void	run_builtin_child(t_comand *cmd, t_heart *heart);
 void	run_builtin_parent(t_comand *cmd, t_heart *heart);
@@ -79,9 +79,9 @@ void	close_all_pipes_child(t_heart *heart);
 void	free_pipes(t_heart *heart);
 void	init_pipes(t_heart *heart);
 void	free_tokens(char **tokens);
-void	expand_var(char *str, int *i, char *result, int *j);
-void	single_quote(char *str, int *i, char *result, int *j);
-void	double_quote(char *str, int *i, char *result, int *j);
+void	expand_var(char *str, int *i, char *result, int *j, char **env);
+void	single_quote(char *str, int *i, char *result, int *j, char **env);
+void	double_quote(char *str, int *i, char *result, int *j, char **env);
 
 char	**init_envp(char **envp);
 char	**add_token(char **tokens, const char *token);
@@ -89,7 +89,8 @@ char	*get_word(char *str, int start);
 char	**process_input(char *input);
 char	**pipes_split(char *input, int num_cmds);
 char	*get_path(char *cmd, char **env);
-char	*quote_menage(char *token);
+char	*quote_menage(char *token, char **env);
+char	*env_value(char **env, char *var_name);
 
 int		arraylen(char **array);
 int		count_pipes(char *str);
@@ -102,7 +103,7 @@ int		get_operator_len(char *str, int start);
 int		get_normal_len(char *str, int start);
 int		get_manage(char *str, int start);
 int		redirection(char *token);
-int		parse_input(t_heart *heart, char *input);
+int		parse_input(t_heart *heart, char *input, char **env);
 int		execute_commands(t_heart *heart);
 int		create_heredoc(t_heart *heart);
 int		is_parent_builtin(const char *cmd);
