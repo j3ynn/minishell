@@ -56,11 +56,12 @@ void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)	/
 	{
 		ft_strlcpy(heart->heredoc.delimiter, tokens[*j + 1], 250);
 		cmd->input_file = ft_strdup("HEREDOC");
+		create_heredoc(heart);
 	}
 	(*j) += 2;
 }
 
-void	setup_command(t_comand *cmd, char **tokens, t_heart *heart, char **env)	//prepara la struttura cmd a poter eseguire un comando
+void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)	//prepara la struttura cmd a poter eseguire un comando
 {																		//estrae in comando, estrae gli argomenti, gestisce le redirezioni
 	int		j;																	//salva tutto dentroa t_comand
 	int		arg_idx;
@@ -80,7 +81,7 @@ void	setup_command(t_comand *cmd, char **tokens, t_heart *heart, char **env)	//p
 			handle_redirections(cmd, tokens, &j, heart);
 		else
 		{
-			quote = quote_menage(tokens[j], env);
+			quote = quote_menage(tokens[j], heart);
 			if (arg_idx == 0)
 				cmd->comd = ft_strdup(quote);
 			cmd->args[arg_idx++] = quote;
@@ -90,7 +91,7 @@ void	setup_command(t_comand *cmd, char **tokens, t_heart *heart, char **env)	//p
 	cmd->args[arg_idx] = NULL;
 }
 
-void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index, char **env)	//prepara un singolo comando prima di eseguirlo
+void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index)	//prepara un singolo comando prima di eseguirlo
 {																				//ES capisce cosa vuoi fare, segna tutto e in fine esegue
 	char		**tokens;
 	t_comand	*cmd;
@@ -99,11 +100,11 @@ void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index, char **
 	if (!tokens || !tokens[0])
 		return ;
 	cmd = &heart->comds[cmd_index];
-	setup_command(cmd, tokens, heart, env);
+	setup_command(cmd, tokens, heart);
 	free_tokens(tokens);
 }
 
-int	parse_input(t_heart *heart, char *input, char **env)	//analizza tutto l'input, divide in più comandi, gestisce le pipe e analizza le strutture
+int	parse_input(t_heart *heart, char *input)	//analizza tutto l'input, divide in più comandi, gestisce le pipe e analizza le strutture
 {
 	char	**cmd_strs;
 	int		i;
@@ -122,7 +123,7 @@ int	parse_input(t_heart *heart, char *input, char **env)	//analizza tutto l'inpu
 	i = 0;
 	while (i < heart->num_comds)
 	{
-		create_single_command(heart, cmd_strs[i], i, env);
+		create_single_command(heart, cmd_strs[i], i);
 		i++;
 	}
 	free_tokens(cmd_strs);

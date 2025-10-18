@@ -26,9 +26,26 @@ void	run_builtin_parent(t_comand *cmd, t_heart *heart)
 		else if (chdir(cmd->args[1]) == -1)
 			perror("minishell: cd");
 	}
+	else if(!ft_strcmp(cmd->comd, "unset"))
+	{
+		int i = 1;
+		while (cmd->args[i])
+		{
+			heart->env = unset_env_var(heart->env, cmd->args[i]);
+			i++;
+		}
+	}
+	else if(!ft_strcmp(cmd->comd, "export"))
+	{
+		int i = 0;
+		while (cmd->args[i])
+		{
+			heart->env = export_env_var(heart->env, cmd->args[i]);
+			i++;
+		}
+	}
 	else if (!ft_strcmp(cmd->comd, "exit"))
 	{
-		printf("exit\n");
 		free_commands(heart);
 		exit(0);
 	}

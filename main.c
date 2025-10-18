@@ -25,7 +25,7 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("minishell$ ");	
 		if (!line)
 			break ;
-		if (parse_input(&heart, line, envp) == 0)
+		if (parse_input(&heart, line) == 0)
 			execute_commands(&heart);
 		else
 			return(1);
