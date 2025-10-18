@@ -40,13 +40,16 @@ static void	child_process(t_comand *cmd, t_heart *heart, int i)
 	if (path)
 	{
 		execve(path, cmd->args, heart->env);
-		perror("execve");
+		ft_putstr_fd("minishell: ", 2);
+		perror(cmd->comd);
 		free(path);
 		exit(127);
 	}
 	else
 	{
-		fprintf(stderr, "minishell: %s: command not found\n", cmd->comd);
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->comd, 2);
+		ft_putendl_fd(": command not found", 2);
 		exit(127);
 	}
 }
@@ -72,7 +75,7 @@ int	execute_commands(t_heart *heart)
 		i++;
 	}
 	free_pipes(heart);
-	wait_all(pids, heart->num_comds);
+	heart->last_status = wait_all(pids, heart->num_comds);
 	free(pids);
-	return (g_exit);
+	return (heart->last_status);
 }

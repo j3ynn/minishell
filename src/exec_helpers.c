@@ -63,18 +63,20 @@ char	*get_path(char *cmd, char **envp)
 	return (NULL);
 }
 
-void	wait_all(pid_t *pids, int n)
+int wait_all(pid_t *pids, int n)
 {
-	int	i;
-	int	status;
-
+	int i;
+	int status;
+	int exit_code = 0;
 	i = 0;
 	while (i < n)
 	{
 		waitpid(pids[i], &status, 0);
 		if (WIFEXITED(status))
-			g_exit = WEXITSTATUS(status);
+			exit_code = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			exit_code = 128 + WTERMSIG(status);
 		i++;
 	}
+	return exit_code; // restituisce l'exit code dell'ultimo processo
 }
-

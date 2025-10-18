@@ -32,11 +32,3 @@ int create_heredoc(t_heart *heart)
     return (0);
 }
 
-void	cleanup_heredoc(t_heart *heart)
-{
-	if (!heart || !heart->heredoc.temp_file)
-		return ;
-	unlink(heart->heredoc.temp_file);
-	free(heart->heredoc.temp_file);
-	heart->heredoc.temp_file = NULL;
-}

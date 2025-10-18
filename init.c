@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-int g_exit = 0;
 
 void	init_heart(t_heart *heart, char **envp)
 {
@@ -69,8 +68,6 @@ char	**init_envp(char **envp){
 void	init_heredoc(t_heart *heart)
 {
 	heart->heredoc.delimiter[0] = '\0';
-	heart->heredoc.content = NULL;
-	heart->heredoc.temp_file = NULL;
 }
 
 void	init_stdin_stdout(t_heart *heart)

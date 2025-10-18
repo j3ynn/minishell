@@ -17,7 +17,10 @@ int open_input_file(t_comand *cmd, t_heart *heart)
 
     fd = open(cmd->input_file, O_RDONLY);
     if (fd == -1)
-        perror("open");
+    {
+	    ft_putstr_fd("minishell: ", 2);
+	    perror(cmd->input_file);
+    }
     return fd;
 }
 
@@ -35,6 +38,9 @@ int	open_output_file(t_comand *cmd)
 		flags |= O_TRUNC;
 	fd = open(cmd->output_file, flags, 0644);
 	if (fd == -1)
-		fprintf(stderr, "minishell: %s: %s\n", cmd->output_file, strerror(errno));
+	{
+		ft_putstr_fd("minishell: ", 2);
+		perror(cmd->output_file);
+	}
 	return (fd);
 }

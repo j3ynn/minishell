@@ -20,6 +20,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_heart(&heart, envp);
+	setup_signals();
 	while (1)
 	{
 		line = readline("minishell$ ");	

@@ -27,7 +27,7 @@
 #define MAX_VAR_LENGTH 256
 
 typedef struct s_heart  t_heart;
-extern int g_exit; // salva lo stato di uscita dell’ultimo comando
+extern volatile sig_atomic_t g_signal; // salva lo stato di uscita dell’ultimo comando
 
 	typedef struct s_comand
 	{
@@ -56,6 +56,7 @@ extern int g_exit; // salva lo stato di uscita dell’ultimo comando
 		bool		has_pipes;		// se ci sono o no pipe (true ci sono)
 		int			stdin_backup;	// Salva lo standard input (tastiera)
 		int			stdout_backup;	// Salva lo standard output (schermo)
+		int		last_status;
 	} t_heart;
 
 void	init_heart(t_heart *heart, char **envp);
@@ -69,7 +70,7 @@ void	free_tokens(char **tokens);
 void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart);
 void	setup_command(t_comand *cmd, char **tokens, t_heart *heart);
 void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index);
-void	wait_all(pid_t *pids, int n);
+int	wait_all(pid_t *pids, int n);
 void	run_builtin_child(t_comand *cmd, t_heart *heart);
 void	run_builtin_parent(t_comand *cmd, t_heart *heart);
 void	close_all_pipes_child(t_heart *heart);
@@ -109,8 +110,11 @@ int		open_input_file(t_comand *cmd, t_heart *heart);
 int		is_child_builtin(const char *cmd);
 int		count_env(char **envp);
 int		find_env_index(char **envp, const char *key);
-char 		**unset_env_var(char **envp, const char *key);
-char		**export_env_var(char **envp, const char *var);
+char 		**unset_env_var(char **envp, const char *key, t_heart *heart);
+char		**export_env_var(char **envp, const char *var, t_heart *heart);
 void		free_all(t_heart *heart);
 void		free_env(char **env);
+int		is_valid_identifier(const char *str);
+void		sigint_handler(int signo);
+void		setup_signals(void);
 #endif

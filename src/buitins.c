@@ -31,7 +31,7 @@ void	run_builtin_parent(t_comand *cmd, t_heart *heart)
 		int i = 1;
 		while (cmd->args[i])
 		{
-			heart->env = unset_env_var(heart->env, cmd->args[i]);
+			heart->env = unset_env_var(heart->env, cmd->args[i], heart);
 			i++;
 		}
 	}
@@ -40,7 +40,7 @@ void	run_builtin_parent(t_comand *cmd, t_heart *heart)
 		int i = 0;
 		while (cmd->args[i])
 		{
-			heart->env = export_env_var(heart->env, cmd->args[i]);
+			heart->env = export_env_var(heart->env, cmd->args[i], heart);
 			i++;
 		}
 	}
