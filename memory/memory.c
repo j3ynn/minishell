@@ -54,3 +54,30 @@ void	free_tokens(char **tokens)
 	free(tokens);
 }
 
+void free_env(char **env)
+{
+    int i = 0;
+    if (!env)
+        return;
+    while (env[i])
+    {
+        free(env[i]);
+        i++;
+    }
+    free(env);
+}
+
+void free_all(t_heart *heart)
+{
+    if (!heart)
+        return;
+    if(heart->env)
+	    free_env(heart->env);
+    if(heart->comds)
+	    free_commands(heart);
+    if(heart->pipes)
+	    free_pipes(heart);
+    if (heart->input_line)
+        free(heart->input_line);
+}
+

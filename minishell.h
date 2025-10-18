@@ -43,8 +43,6 @@ extern int g_exit; // salva lo stato di uscita dell’ultimo comando
 	typedef struct s_heredoc
 	{
 		char	delimiter[250];	// Delimitatore per heredoc
-		char	*content;		// Contenuto del heredoc
-		char	*temp_file;		// File temporaneo
 	} t_heredoc;
 
 	typedef struct s_heart
@@ -74,7 +72,6 @@ void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index);
 void	wait_all(pid_t *pids, int n);
 void	run_builtin_child(t_comand *cmd, t_heart *heart);
 void	run_builtin_parent(t_comand *cmd, t_heart *heart);
-void	cleanup_heredoc(t_heart *heart);
 void	close_all_pipes_child(t_heart *heart);
 void	free_pipes(t_heart *heart);
 void	init_pipes(t_heart *heart);
@@ -114,5 +111,6 @@ int		count_env(char **envp);
 int		find_env_index(char **envp, const char *key);
 char 		**unset_env_var(char **envp, const char *key);
 char		**export_env_var(char **envp, const char *var);
-
+void		free_all(t_heart *heart);
+void		free_env(char **env);
 #endif

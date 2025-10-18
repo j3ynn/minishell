@@ -22,7 +22,7 @@ void	run_builtin_parent(t_comand *cmd, t_heart *heart)
 	if (!ft_strcmp(cmd->comd, "cd"))
 	{
 		if (!cmd->args[1])
-			fprintf(stderr, "minishell: cd: missing argument\n");
+			ft_putendl_fd("minishell: cd: missing argument", 2);
 		else if (chdir(cmd->args[1]) == -1)
 			perror("minishell: cd");
 	}
@@ -46,7 +46,7 @@ void	run_builtin_parent(t_comand *cmd, t_heart *heart)
 	}
 	else if (!ft_strcmp(cmd->comd, "exit"))
 	{
-		free_commands(heart);
+		free_all(heart);
 		exit(0);
 	}
 }
