@@ -25,12 +25,24 @@ int	main(int argc, char **argv, char **envp)
 	{
 		line = readline("minishell$ ");	
 		if (!line)
-			break ;
+		{
+			printf("exit\n");
+			free_all(&heart);
+			exit(heart.last_status);
+		}
+		if (*line)
+			add_history(line);
 		if (parse_input(&heart, line) == 0)
+		{
 			execute_commands(&heart);
+			free_commands(&heart);
+		}
 		else
-			return(1);
-		free_commands(&heart);
+		{
+			free(line);
+			free_commands(&heart);
+			continue;
+		}
 		free(line);
 	}
 	return (0);

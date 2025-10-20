@@ -56,7 +56,6 @@ void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)	/
 	{
 		ft_strlcpy(heart->heredoc.delimiter, tokens[*j + 1], 250);
 		cmd->input_file = ft_strdup("HEREDOC");
-		create_heredoc(heart);
 	}
 	(*j) += 2;
 }

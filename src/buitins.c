@@ -47,7 +47,7 @@ void	run_builtin_parent(t_comand *cmd, t_heart *heart)
 	else if (!ft_strcmp(cmd->comd, "exit"))
 	{
 		free_all(heart);
-		exit(0);
+		exit(heart->last_status);
 	}
 }
 

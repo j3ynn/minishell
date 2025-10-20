@@ -9,10 +9,8 @@ int open_input_file(t_comand *cmd, t_heart *heart)
 
     if (!ft_strcmp(cmd->input_file, "HEREDOC"))
     {
-        // heredoc: create_heredoc già fa dup2() su STDIN,
-        // quindi qui non apriamo niente e ritorniamo -1
-        create_heredoc(heart);
-        return -1;
+        fd = create_heredoc(heart);
+	return (fd);
     }
 
     fd = open(cmd->input_file, O_RDONLY);

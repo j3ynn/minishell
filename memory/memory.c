@@ -72,12 +72,23 @@ void free_all(t_heart *heart)
     if (!heart)
         return;
     if(heart->env)
+    {
 	    free_env(heart->env);
+	    heart->env = NULL;
+    }
     if(heart->comds)
+    {
 	    free_commands(heart);
+    }
     if(heart->pipes)
+    {
 	    free_pipes(heart);
+	    heart->pipes = NULL;
+    }
     if (heart->input_line)
+    {
         free(heart->input_line);
+	heart->input_line = NULL;
+    }
 }
 
