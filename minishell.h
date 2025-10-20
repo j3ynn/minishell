@@ -6,7 +6,7 @@
 /*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/10/17 17:07:25 by jbellucc         ###   ########.fr       */
+/*   Updated: 2025/10/20 19:33:14 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include <fcntl.h>
+# include <signal.h>
 
 #define MAX_VAR_LENGTH 256
 
@@ -56,7 +57,7 @@ extern volatile sig_atomic_t g_signal; // salva lo stato di uscita dell’ultimo
 		bool		has_pipes;		// se ci sono o no pipe (true ci sono)
 		int			stdin_backup;	// Salva lo standard input (tastiera)
 		int			stdout_backup;	// Salva lo standard output (schermo)
-		int		last_status;
+		int			last_status;
 	} t_heart;
 
 void	init_heart(t_heart *heart, char **envp);
@@ -70,7 +71,6 @@ void	free_tokens(char **tokens);
 void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart);
 void	setup_command(t_comand *cmd, char **tokens, t_heart *heart);
 void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index);
-int	wait_all(pid_t *pids, int n);
 void	run_builtin_child(t_comand *cmd, t_heart *heart);
 void	run_builtin_parent(t_comand *cmd, t_heart *heart);
 void	close_all_pipes_child(t_heart *heart);
@@ -80,6 +80,10 @@ void	free_tokens(char **tokens);
 void	expand_var(char *str, int *i, char *result, int *j, t_heart *heart);
 void	single_quote(char *str, int *i, char *result, int *j);
 void	double_quote(char *str, int *i, char *result, int *j, t_heart *heart);
+void	free_all(t_heart *heart);
+void	free_env(char **env);
+void	sigint_handler(int signo);
+void	setup_signals(void);
 
 char	**init_envp(char **envp);
 char	**add_token(char **tokens, const char *token);
@@ -89,6 +93,8 @@ char	**pipes_split(char *input, int num_cmds);
 char	*get_path(char *cmd, char **env);
 char	*quote_menage(char *token, t_heart *heart);
 char	*env_value(t_heart *heart, char *var_name);
+char	**unset_env_var(char **envp, const char *key, t_heart *heart);
+char	**export_env_var(char **envp, const char *var, t_heart *heart);
 
 int		arraylen(char **array);
 int		count_pipes(char *str);
@@ -110,11 +116,7 @@ int		open_input_file(t_comand *cmd, t_heart *heart);
 int		is_child_builtin(const char *cmd);
 int		count_env(char **envp);
 int		find_env_index(char **envp, const char *key);
-char 		**unset_env_var(char **envp, const char *key, t_heart *heart);
-char		**export_env_var(char **envp, const char *var, t_heart *heart);
-void		free_all(t_heart *heart);
-void		free_env(char **env);
+int		wait_all(pid_t *pids, int n);
 int		is_valid_identifier(const char *str);
-void		sigint_handler(int signo);
-void		setup_signals(void);
+
 #endif

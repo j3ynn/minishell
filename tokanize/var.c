@@ -25,9 +25,24 @@ void	expand_var(char *str, int *i, char *result, int *j, t_heart *heart)	//espan
 {
 	char	name_var[MAX_VAR_LENGTH];
 	char	*value;
+	char	*exit_code;
 	int		k = 0;
 
 	(*i)++;
+	if (str[*i] == '?')
+	{
+		exit_code = ft_itoa(heart->last_status);
+		k = 0;
+		while (exit_code[k])
+		{
+			result[(*j)++] = exit_code[k];
+			k++;
+		}
+		free(exit_code);
+		(*i)++;
+		return ;
+	}
+	k = 0;
 	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
 	{
 		name_var[k++] = str[*i];
