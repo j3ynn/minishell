@@ -44,8 +44,16 @@ void	double_quote(char *str, int *i, char *result, int *j, t_heart *heart)	//se 
 	(*i)++;
 	while (str[*i] && str[*i] != '"')
 	{
-		if (str[*i] == '$' && str[*i + 1] && (ft_isalnum(str[*i + 1]) || str[*i + 1] == '_'))
-			expand_var(str, i, result, j, heart);
+		if (str[*i] == '$' && str[*i + 1])
+		{
+			if (str[*i + 1] == '?' || ft_isalnum(str[*i + 1]) || str[*i + 1] == '_')
+				expand_var(str, i, result, j, heart);
+			else
+			{
+				result[(*j)++] = str[*i];
+				(*i)++;
+			}
+		}
 		else
 		{
 			result[(*j)++] = str[*i];
@@ -73,8 +81,11 @@ char	*quote_menage(char *token, t_heart *heart)	//gestisce tutti i casi richiama
 			single_quote(token, &i, result, &j);
 		else if (token[i] == '"')
 			double_quote(token, &i, result, &j, heart);
-		else if (token[i] == '$' && token[i + 1] && (ft_isalnum(token[i + 1]) || token[i + 1] == '_'))
-			expand_var(token, &i, result, &j, heart);
+		else if (token[i] == '$' && token[i + 1])
+		{
+			if (token[i + 1] == '?' || ft_isalnum(token[i + 1]) || token[i + 1] == '_')
+				expand_var(token, &i, result, &j, heart);
+		}
 		else
 		{
 			result[j++] = token[i];

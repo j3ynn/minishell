@@ -49,7 +49,7 @@ void	expand_var(char *str, int *i, char *result, int *j, t_heart *heart)	//espan
 		(*i)++;
 	}
 	name_var[k] = '\0';
-	value = env_value(heart, name_var);	//cercarca la variabile d’ambiente(es: getenv("USER")
+	value = env_value(heart, name_var);	//cercarca la variabile d’ambiente(es: env_value("USER")
 	if (value)
 	{
 		k = 0;
