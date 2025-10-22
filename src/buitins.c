@@ -70,7 +70,23 @@ void	run_builtin_child(t_comand *cmd, t_heart *heart)
 
 	if (!ft_strcmp(cmd->comd, "echo"))
 	{
+		int newline = 1;
 		i = 1;
+
+		// Gestione opzione -n (anche -nnn…)
+		while (cmd->args[i] && cmd->args[i][0] == '-'
+				 && cmd->args[i][1] == 'n')
+		{
+			int j = 1;
+			while (cmd->args[i][j] == 'n')
+				j++;
+			if (cmd->args[i][j] != '\0')
+				break; // non è un vero -n, es: "-nx"
+			newline = 0;
+			i++;
+		}
+
+		// Stampa gli argomenti rimanenti
 		while (cmd->args[i])
 		{
 			printf("%s", cmd->args[i]);
@@ -78,7 +94,8 @@ void	run_builtin_child(t_comand *cmd, t_heart *heart)
 				printf(" ");
 			i++;
 		}
-		printf("\n");
+		if (newline)
+			printf("\n");
 		exit(0);
 	}
 	else if (!ft_strcmp(cmd->comd, "pwd"))

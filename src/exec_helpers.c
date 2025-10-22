@@ -41,7 +41,17 @@ char	*get_path(char *cmd, char **envp)
 	char	*path_env;
 	char	*full_path;
 	int		i;
+	
+	// Caso 1: contiene '/' → è un percorso (assoluto o relativo)
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));  // restituisci una copia
+		else
+			return (NULL);            // non eseguibile / non trovato
+	}
 
+	// Caso 2: nessuno slash → cerca in PATH
 	path_env = find_path_env(envp);
 	if (!path_env)
 		return (NULL);
