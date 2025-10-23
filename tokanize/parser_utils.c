@@ -1,13 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/23 15:22:01 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/10/23 15:56:20 by jbellucc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int	redirection(char *token)
+char	**pipes_split(char *input, int num_cmds)
 {
-	return (ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0 ||
-			ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0);
-}
-
-char	**pipes_split(char *input, int num_cmds)	//lavora nell input e se ci sono comandi separati da pipe li spezza
-{														//in un array di stringhe ed ogniuna conterrà un singolo comando suca
 	char	**cmd_separ;
 	int		cmd_idx;
 	int		start;
@@ -16,10 +22,10 @@ char	**pipes_split(char *input, int num_cmds)	//lavora nell input e se ci sono c
 	cmd_separ = malloc(sizeof(char *) * (num_cmds + 1));
 	cmd_idx = 0;
 	start = 0;
-	i = 0;
+	i = -1;
 	if (!cmd_separ)
 		return (NULL);
-	while (input[i])
+	while (input[++i])
 	{
 		if (input[i] == '"' || input[i] == '\'')
 			i += get_quoted_len(input, i);
@@ -29,17 +35,17 @@ char	**pipes_split(char *input, int num_cmds)	//lavora nell input e se ci sono c
 			start = i + 1;
 			start += skip_whitespace(input + start);
 		}
-		i++;
 	}
 	cmd_separ[cmd_idx] = ft_substr(input, start, i - start);
-	cmd_separ[cmd_idx+1] = NULL;
+	cmd_separ[cmd_idx +1] = NULL;
 	return (cmd_separ);
 }
 
-void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)	//da effetivamente un valore ai simboli di redirezione
+void	handle_redirections(t_comand *cmd, char **tokens,
+	int *j, t_heart *heart)
 {
 	if (!tokens[*j + 1])
-		return;
+		return ;
 	if (ft_strcmp(tokens[*j], "<") == 0)
 		cmd->input_file = ft_strdup(tokens[*j + 1]);
 	else if (ft_strcmp(tokens[*j], ">") == 0)
@@ -60,9 +66,9 @@ void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart)	/
 	(*j) += 2;
 }
 
-void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)	//prepara la struttura cmd a poter eseguire un comando
-{																		//estrae in comando, estrae gli argomenti, gestisce le redirezioni
-	int		j;																	//salva tutto dentroa t_comand
+void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)
+{
+	int		j;
 	int		arg_idx;
 	char	*quote;
 
@@ -70,7 +76,7 @@ void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)	//prepara la st
 	arg_idx = 0;
 	cmd->num_arg = count_args(tokens);
 	if (cmd->num_arg == 0)
-		return;
+		return ;
 	cmd->args = malloc(sizeof(char *) * (cmd->num_arg + 1));
 	if (!cmd->args)
 		return ;
@@ -80,18 +86,17 @@ void	setup_command(t_comand *cmd, char **tokens, t_heart *heart)	//prepara la st
 			handle_redirections(cmd, tokens, &j, heart);
 		else
 		{
-			quote = quote_menage(tokens[j], heart);
+			quote = quote_menage(tokens[j++], heart);
 			if (arg_idx == 0)
 				cmd->comd = ft_strdup(quote);
 			cmd->args[arg_idx++] = quote;
-			j++;
 		}
 	}
 	cmd->args[arg_idx] = NULL;
 }
 
-void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index)	//prepara un singolo comando prima di eseguirlo
-{																				//ES capisce cosa vuoi fare, segna tutto e in fine esegue
+void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index)
+{
 	char		**tokens;
 	t_comand	*cmd;
 
@@ -103,7 +108,7 @@ void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index)	//prepa
 	free_tokens(tokens);
 }
 
-int	parse_input(t_heart *heart, char *input)	//analizza tutto l'input, divide in più comandi, gestisce le pipe e analizza le strutture
+int	parse_input(t_heart *heart, char *input)
 {
 	char	**cmd_strs;
 	int		i;

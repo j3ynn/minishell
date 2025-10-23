@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quote.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/23 16:05:24 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/10/23 16:25:23 by jbellucc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int	handle_quotes(char *str)	// Questa funzione controlla se ci sono virgolette aperte ma non chiuse correttamente nella stringa.
-{									//se le virgolette non sono chiuse correttamente il comando e' sbagliato
+int	handle_quotes(char *str)
+{
 	char	quote;
 	bool	in_quotes;
-	int 	i;
+	int		i;
 
 	i = 0;
 	in_quotes = false;
@@ -17,17 +29,15 @@ int	handle_quotes(char *str)	// Questa funzione controlla se ci sono virgolette 
 				in_quotes = true;
 				quote = str[i];
 			}
-			else if(str[i] == quote)
-			{
-				in_quotes = false; 
-			}
+			else if (str[i] == quote)
+				in_quotes = false;
 		}
 		i++;
 	}
 	return (in_quotes);
 }
 
-void	single_quote(char *str, int *i, char *result, int *j)	//non interpreta ne espande nulla, quando stampi tra "'" non le stampa
+void	single_quote(char *str, int *i, char *result, int *j)
 {
 	(*i)++;
 	while (str[*i] && str[*i] != '\'')
@@ -39,8 +49,10 @@ void	single_quote(char *str, int *i, char *result, int *j)	//non interpreta ne e
 		(*i)++;
 }
 
-void	double_quote(char *str, int *i, char *result, int *j, t_heart *heart)	//se ci sono le doppie espande e non stampa le quote
+void	double_quote(char *str, int *i, char *result, int *j)
 {
+	t_heart	*heart;
+
 	(*i)++;
 	while (str[*i] && str[*i] != '"')
 	{
@@ -64,13 +76,13 @@ void	double_quote(char *str, int *i, char *result, int *j, t_heart *heart)	//se 
 		(*i)++;
 }
 
-char	*quote_menage(char *token, t_heart *heart)	//gestisce tutti i casi richiamando la funzione sopra
+char	*quote_menage(char *token, t_heart *heart)
 {
 	char	*result;
-	int 	i;
-	int 	j;
+	int		i;
+	int		j;
 
-	result = malloc(ft_strlen(token) * 10);  // Buffer largo per espansioni
+	result = malloc(ft_strlen(token) * 10);
 	if (!result)
 		return (NULL);
 	i = 0;
@@ -80,7 +92,7 @@ char	*quote_menage(char *token, t_heart *heart)	//gestisce tutti i casi richiama
 		if (token[i] == '\'')
 			single_quote(token, &i, result, &j);
 		else if (token[i] == '"')
-			double_quote(token, &i, result, &j, heart);
+			double_quote(token, &i, result, &j);
 		else if (token[i] == '$' && token[i + 1])
 		{
 			if (token[i + 1] == '?' || ft_isalnum(token[i + 1]) || token[i + 1] == '_')

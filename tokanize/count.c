@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   count.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/23 14:50:31 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/10/23 15:17:49 by jbellucc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int	count_args(char **tokens)	//conta solo gli argomenti veri, escludendo redirezioni
+int	count_args(char **tokens)
 {
 	int	i;
 	int	count;
 
 	i = 0;
 	count = 0;
-
 	while (tokens[i])
 	{
-		if (ft_strcmp(tokens[i], "<") == 0 || ft_strcmp(tokens[i], ">") == 0 ||
-			ft_strcmp(tokens[i], ">>") == 0 || ft_strcmp(tokens[i], "<<") == 0)
+		if (ft_strcmp(tokens[i], "<") == 0 || ft_strcmp(tokens[i], ">") == 0
+			|| ft_strcmp(tokens[i], ">>") == 0
+			|| ft_strcmp(tokens[i], "<<") == 0)
 		{
 			i++;
 			if (tokens[i])
@@ -26,29 +38,38 @@ int	count_args(char **tokens)	//conta solo gli argomenti veri, escludendo redire
 	return (count);
 }
 
-int	count_pipes(char *str)	//conta le pipe, ingnora quelle tra virgolette e	ES se ci sono 2 pipe
-{								//restituisce il numero totale di comandi			il numero degli argomenti è 3
-	int		i = 0;
-	int		count_pipes_out = 0;
-	bool	in_quotes = false;
-	char	closed_quote = 0;
+static void	count_pipe2(char c, bool *in_quotes, char *closed_quote)
+{
+	if (c == '\'' || c == '"')
+	{
+		if (!(*in_quotes))
+		{
+			*in_quotes = true;
+			*closed_quote = c;
+		}
+		else if (c == *closed_quote)
+		{
+			*in_quotes = false;
+			*closed_quote = 0;
+		}
+	}
+}
 
+int	count_pipes(char *str)
+{
+	int		i;
+	int		count_pipes_out;
+	bool	in_quotes;
+	char	closed_quote;
+
+	i = 0;
+	count_pipes_out = 0;
+	in_quotes = false;
+	closed_quote = 0;
 	while (str[i])
 	{
-		if ((str[i] == '\'' || str[i] == '"'))
-		{
-			if (!in_quotes)
-			{
-				in_quotes = true;
-				closed_quote = str[i];
-			}
-			else if (str[i] == closed_quote)
-			{
-				in_quotes = false;
-				closed_quote = 0;
-			}
-		}
-		else if (str[i] == '|' && !in_quotes)
+		count_pipe2(str[i], &in_quotes, &closed_quote);
+		if (str[i] == '|' && !in_quotes)
 			count_pipes_out++;
 		i++;
 	}

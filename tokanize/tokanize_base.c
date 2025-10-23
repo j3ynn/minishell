@@ -1,5 +1,11 @@
 #include "../minishell.h"
 
+int	redirection(char *token)
+{
+	return (ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0
+		|| ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0);
+}
+
 int	skip_whitespace(char *str)	//salta tutti gli spazi e tab in più nella stringa
 {
 	int i = 0;

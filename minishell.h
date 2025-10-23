@@ -6,7 +6,7 @@
 /*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/10/21 15:52:23 by jbellucc         ###   ########.fr       */
+/*   Updated: 2025/10/23 16:24:07 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	init_pipes(t_heart *heart);
 void	free_tokens(char **tokens);
 void	expand_var(char *str, int *i, char *result, int *j, t_heart *heart);
 void	single_quote(char *str, int *i, char *result, int *j);
-void	double_quote(char *str, int *i, char *result, int *j, t_heart *heart);
+void	double_quote(char *str, int *i, char *result, int *j);
 void	free_all(t_heart *heart);
 void	free_env(char **env);
 void	sigint_handler(int signo);
