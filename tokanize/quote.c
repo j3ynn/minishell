@@ -6,7 +6,7 @@
 /*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 16:05:24 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/10/23 16:25:23 by jbellucc         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:18:09 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ void	double_quote(char *str, int *i, char *result, int *j)
 	{
 		if (str[*i] == '$' && str[*i + 1])
 		{
-			if (str[*i + 1] == '?' || ft_isalnum(str[*i + 1]) || str[*i + 1] == '_')
+			if (str[*i + 1] == '?' || ft_isalnum(str[*i + 1])
+				|| str[*i + 1] == '_')
 				expand_var(str, i, result, j, heart);
 			else
 			{
@@ -76,6 +77,32 @@ void	double_quote(char *str, int *i, char *result, int *j)
 		(*i)++;
 }
 
+static void	quote_menage2(char *token, int *i, char *result, int *j)
+{
+	t_heart	*heart;
+
+	if (token[*i] == '\'')
+		single_quote(token, i, result, j);
+	else if (token[*i] == '"')
+		double_quote(token, i, result, j);
+	else if (token[*i] == '$' && token[*i + 1])
+	{
+		if (token[*i + 1] == '?' || ft_isalnum(token[*i + 1])
+			|| token[*i + 1] == '_')
+			expand_var(token, i, result, j, heart);
+		else
+		{
+			result[(*j)++] = token[*i];
+			(*i)++;
+		}
+	}
+	else
+	{
+		result[(*j)++] = token[*i];
+		(*i)++;
+	}
+}
+
 char	*quote_menage(char *token, t_heart *heart)
 {
 	char	*result;
@@ -88,22 +115,7 @@ char	*quote_menage(char *token, t_heart *heart)
 	i = 0;
 	j = 0;
 	while (token[i])
-	{
-		if (token[i] == '\'')
-			single_quote(token, &i, result, &j);
-		else if (token[i] == '"')
-			double_quote(token, &i, result, &j);
-		else if (token[i] == '$' && token[i + 1])
-		{
-			if (token[i + 1] == '?' || ft_isalnum(token[i + 1]) || token[i + 1] == '_')
-				expand_var(token, &i, result, &j, heart);
-		}
-		else
-		{
-			result[j++] = token[i];
-			i++;
-		}
-	}
+		quote_menage2(token, &i, result, &j);
 	result[j] = '\0';
 	return (result);
 }

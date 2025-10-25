@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   var.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/25 16:29:40 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/10/25 16:33:49 by jbellucc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-char	*env_value(t_heart *heart, char *var_name)	//cerca il valore di una variabile d’ambiente
+char	*env_value(t_heart *heart, char *var_name)
 {
 	int		i;
 	char	*equal_pos;
@@ -13,7 +25,8 @@ char	*env_value(t_heart *heart, char *var_name)	//cerca il valore di una variabi
 		if (equal_pos)
 		{
 			name_len = equal_pos - heart->env[i];
-			if (ft_strncmp(heart->env[i], var_name, name_len) == 0 &&	var_name[name_len] == '\0')
+			if (ft_strncmp(heart->env[i], var_name, name_len) == 0
+				&& var_name[name_len] == '\0')
 				return (equal_pos + 1);
 		}
 		i++;
@@ -21,25 +34,33 @@ char	*env_value(t_heart *heart, char *var_name)	//cerca il valore di una variabi
 	return (NULL);
 }
 
-void	expand_var(char *str, int *i, char *result, int *j, t_heart *heart)	//espande le variabili (sostituendo il nome variabile con il suo valore)
+static void	expand_var2(t_heart *heart, char *result, int *j, int *i)
 {
+	char	*exit_code;
+	int		k;
+
+	exit_code = ft_itoa(heart->last_status);
+	k = 0;
+	while (exit_code[k])
+	{
+		result[(*j)++] = exit_code[k];
+		k++;
+	}
+	free(exit_code);
+	(*i)++;
+}
+
+void	expand_var(char *str, int *i, char *result, int *j)
+{
+	t_heart	*heart;
 	char	name_var[MAX_VAR_LENGTH];
 	char	*value;
-	char	*exit_code;
-	int		k = 0;
+	int		k;
 
 	(*i)++;
 	if (str[*i] == '?')
 	{
-		exit_code = ft_itoa(heart->last_status);
-		k = 0;
-		while (exit_code[k])
-		{
-			result[(*j)++] = exit_code[k];
-			k++;
-		}
-		free(exit_code);
-		(*i)++;
+		expand_var2(heart, result, j, i);
 		return ;
 	}
 	k = 0;
@@ -49,14 +70,11 @@ void	expand_var(char *str, int *i, char *result, int *j, t_heart *heart)	//espan
 		(*i)++;
 	}
 	name_var[k] = '\0';
-	value = env_value(heart, name_var);	//cercarca la variabile d’ambiente(es: env_value("USER")
+	value = env_value(heart, name_var);
 	if (value)
 	{
 		k = 0;
 		while (value[k])
-		{
-			result[(*j)++] = value[k];
-			k++;
-		}
+			result[(*j)++] = value[k++];
 	}
-}	//str = name $USER -> $USER = gayia -> result = name gayia   capito ?
+}

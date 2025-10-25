@@ -1,5 +1,16 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_pipes.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/25 18:27:06 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/10/25 18:27:39 by jbellucc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "../minishell.h"
 
 void	init_pipes(t_heart *heart)
 {
@@ -10,7 +21,6 @@ void	init_pipes(t_heart *heart)
 		heart->pipes = NULL;
 		return ;
 	}
-	
 	heart->pipes = malloc(sizeof(int *) * (heart->num_comds - 1));
 	if (!heart->pipes)
 	{

@@ -1,9 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   memory.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/25 16:35:06 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/10/25 16:40:10 by jbellucc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	free_single_command(t_comand *cmd)
 {
-	int j = 0;
+	int	j;
 
+	j = 0;
 	if (cmd->comd)
 		free(cmd->comd);
 	if (cmd->args)
@@ -14,7 +27,6 @@ void	free_single_command(t_comand *cmd)
 	}
 	if (cmd->input_file)
 		free(cmd->input_file);
-
 	if (cmd->output_file)
 		free(cmd->output_file);
 	cmd->comd = NULL;
@@ -25,10 +37,10 @@ void	free_single_command(t_comand *cmd)
 
 void	free_commands(t_heart *heart)
 {
-	int i;
+	int	i;
 
 	if (!heart || !heart->comds)
-		return;
+		return ;
 	i = 0;
 	while (i < heart->num_comds)
 	{
@@ -42,8 +54,9 @@ void	free_commands(t_heart *heart)
 
 void	free_tokens(char **tokens)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!tokens)
 		return ;
 	while (tokens[i])
@@ -54,41 +67,40 @@ void	free_tokens(char **tokens)
 	free(tokens);
 }
 
-void free_env(char **env)
+void	free_env(char **env)
 {
-    int i = 0;
-    if (!env)
-        return;
-    while (env[i])
-    {
-        free(env[i]);
-        i++;
-    }
-    free(env);
+	int	i;
+
+	i = 0;
+	if (!env)
+		return ;
+	while (env[i])
+	{
+		free(env[i]);
+		i++;
+	}
+	free(env);
 }
 
-void free_all(t_heart *heart)
+void	free_all(t_heart *heart)
 {
-    if (!heart)
-        return;
-    if(heart->env)
-    {
-	    free_env(heart->env);
-	    heart->env = NULL;
-    }
-    if(heart->comds)
-    {
-	    free_commands(heart);
-    }
-    if(heart->pipes)
-    {
-	    free_pipes(heart);
-	    heart->pipes = NULL;
-    }
-    if (heart->input_line)
-    {
-        free(heart->input_line);
-	heart->input_line = NULL;
-    }
+	if (!heart)
+		return ;
+	if (heart->env)
+	{
+		free_env(heart->env);
+		heart->env = NULL;
+	}
+	if (heart->comds)
+		free_commands(heart);
+	if (heart->pipes)
+	{
+		free_pipes(heart);
+		heart->pipes = NULL;
+	}
+	if (heart->input_line)
+	{
+		free(heart->input_line);
+		heart->input_line = NULL;
+	}
 }
-

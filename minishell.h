@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/04 18:35:17 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/10/23 16:24:07 by jbellucc         ###   ########.fr       */
+/*   Created: 2025/10/25 16:55:13 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/10/25 17:13:46 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,40 +25,40 @@
 # include <fcntl.h>
 # include <signal.h>
 
-#define MAX_VAR_LENGTH 256
+# define MAX_VAR_LENGTH 256
 
-typedef struct s_heart  t_heart;
-extern volatile sig_atomic_t g_signal; // salva lo stato di uscita dell’ultimo comando
+typedef struct s_heart			t_heart;
+extern volatile sig_atomic_t	g_signal;
 
-	typedef struct s_comand
-	{
-		t_heart	*heart;			// Puntatore alla struttura principale
-		char	*comd;			// Nome del comando ("echo", "ls"...)
-		char	**args;			// Array di argomenti ["echo", "hello", NULL]
-		char	*input_file;	// File di input o "PIPE_IN"
-		char	*output_file;	// File di output o "PIPE_OUT"
-		bool	redirection;	// false = >, true = >>
-		int		num_arg;		// Numero di argomenti
-	} t_comand;
+typedef struct s_comand
+{
+	t_heart	*heart;
+	char	*comd;
+	char	**args;
+	char	*input_file;
+	char	*output_file;
+	bool	redirection;
+	int		num_arg;
+}	t_comand;
 
-	typedef struct s_heredoc
-	{
-		char	delimiter[250];	// Delimitatore per heredoc
-	} t_heredoc;
+typedef struct s_heredoc
+{
+	char	delimiter[250];
+}	t_heredoc;
 
-	typedef struct s_heart
-	{
-		t_heredoc	heredoc;		// Gestione heredoc
-		t_comand	*comds;			// Array di comandi da eseguire
-		char		*input_line;	// Linea di input dell'utente(quella che leggi)
-		char		**env;			// Variabili d'ambiente per trovare i comandi
-		int			num_comds;		// Numero di comandi (separati da pipe)
-		int			**pipes;		// Matrix per le pipe (per collegare i comandi)
-		bool		has_pipes;		// se ci sono o no pipe (true ci sono)
-		int			stdin_backup;	// Salva lo standard input (tastiera)
-		int			stdout_backup;	// Salva lo standard output (schermo)
-		int			last_status;
-	} t_heart;
+typedef struct s_heart
+{
+	t_heredoc	heredoc;
+	t_comand	*comds;
+	char		*input_line;
+	char		**env;
+	int			num_comds;
+	int			**pipes;
+	bool		has_pipes;
+	int			stdin_backup;
+	int			stdout_backup;
+	int			last_status;
+}	t_heart;
 
 void	init_heart(t_heart *heart, char **envp);
 void	init_heredoc(t_heart *heart);
@@ -68,7 +68,6 @@ void	init_comand(t_heart *heart, int num_commands);
 void	free_single_command(t_comand *cmd);
 void	free_commands(t_heart *heart);
 void	free_tokens(char **tokens);
-void	handle_redirections(t_comand *cmd, char **tokens, int *j, t_heart *heart);
 void	setup_command(t_comand *cmd, char **tokens, t_heart *heart);
 void	create_single_command(t_heart *heart, char *cmd_str, int cmd_index);
 void	run_builtin_child(t_comand *cmd, t_heart *heart);
@@ -77,13 +76,15 @@ void	close_all_pipes_child(t_heart *heart);
 void	free_pipes(t_heart *heart);
 void	init_pipes(t_heart *heart);
 void	free_tokens(char **tokens);
-void	expand_var(char *str, int *i, char *result, int *j, t_heart *heart);
+void	expand_var(char *str, int *i, char *result, int *j);
 void	single_quote(char *str, int *i, char *result, int *j);
 void	double_quote(char *str, int *i, char *result, int *j);
 void	free_all(t_heart *heart);
 void	free_env(char **env);
 void	sigint_handler(int signo);
 void	setup_signals(void);
+void	handle_redirections(t_comand *cmd, char **tokens, int *j,
+			t_heart *heart);
 
 char	**init_envp(char **envp);
 char	**add_token(char **tokens, const char *token);

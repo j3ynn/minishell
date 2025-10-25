@@ -1,15 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokanize_base.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/25 16:18:45 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/10/25 16:26:20 by jbellucc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int	redirection(char *token)
+int	skip_whitespace(char *str)
 {
-	return (ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0
-		|| ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0);
-}
+	int	i;
 
-int	skip_whitespace(char *str)	//salta tutti gli spazi e tab in più nella stringa
-{
-	int i = 0;
-
+	i = 0;
 	while (str[i] == ' ' || str[i] == '\t')
 		i++;
 	return (i);
@@ -17,10 +24,12 @@ int	skip_whitespace(char *str)	//salta tutti gli spazi e tab in più nella strin
 
 char	**add_token(char **tokens, const char *token)
 {
-	int		i = 0;
-	int		j = 0;
+	int		i;
+	int		j;
 	char	**new_tokens;
 
+	i = 0;
+	j = 0;
 	while (tokens[i])
 		i ++;
 	new_tokens = malloc(sizeof(char *) * (i + 2));
@@ -40,8 +49,8 @@ char	**add_token(char **tokens, const char *token)
 	return (new_tokens);
 }
 
-char	*get_word(char *str, int start)	//estrae una parola o un token dalla stringa di input
-{											//tutte le funzioni che ho richiamato stanno in tokanize_utils
+char	*get_word(char *str, int start)
+{
 	int		len;
 	int		i;
 	char	*word;
@@ -60,10 +69,27 @@ char	*get_word(char *str, int start)	//estrae una parola o un token dalla string
 	return (word);
 }
 
-char	**process_input(char *input)	//prende l'input e lo spezza in token
+static char	**process_input2(char *input, int *i, char **tokens)
+{
+	char	*word;
+
+	word = get_word(input, *i);
+	if (!word)
+	{
+		free_tokens(tokens);
+		return (NULL);
+	}
+	tokens = add_token(tokens, word);
+	free(word);
+	if (!tokens)
+		return (NULL);
+	*i += get_manage(input, *i);
+	return (tokens);
+}
+
+char	**process_input(char *input)
 {
 	char	**tokens;
-	char	*word;
 	int		i;
 
 	tokens = malloc(sizeof(char *) * 1);
@@ -75,20 +101,10 @@ char	**process_input(char *input)	//prende l'input e lo spezza in token
 	{
 		i += skip_whitespace(input + i);
 		if (!input[i])
-			break;
-		word = get_word(input, i);
-		if (!word)
-		{
-			free_tokens(tokens);
-			return (NULL);
-		}
-		tokens = add_token(tokens, word);
-		free(word);
+			break ;
+		tokens = process_input2(input, &i, tokens);
 		if (!tokens)
 			return (NULL);
-		i += get_manage(input, i);
 	}
 	return (tokens);
 }
-
-

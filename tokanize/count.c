@@ -6,11 +6,29 @@
 /*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 14:50:31 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/10/23 15:17:49 by jbellucc         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:52:31 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	redirection(char *token)
+{
+	return (ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0
+		|| ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0);
+}
+
+int	arraylen(char **array)
+{
+	int	i;
+
+	i = 0;
+	if (!array)
+		return (0);
+	while (array[i] != NULL)
+		i++;
+	return (i);
+}
 
 int	count_args(char **tokens)
 {

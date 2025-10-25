@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: je <je@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 17:16:56 by jbellucc          #+#    #+#             */
-/*   Updated: 2025/08/11 16:36:40 by je               ###   ########.fr       */
+/*   Updated: 2025/10/25 16:52:14 by jbellucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	init_heart(t_heart *heart, char **envp)
 {
@@ -31,21 +30,16 @@ void	init_heart(t_heart *heart, char **envp)
 	init_heredoc(heart);
 	init_stdin_stdout(heart);
 }
-int	arraylen(char **array)
+
+char	**init_envp(char **envp)
 {
-	int i = 0;
+	int		len;
+	char	**new_env;
+	int		i;
 
-	if (!array)
-		return 0;
-	while (array[i] != NULL)
-		i++;
-	return i;
-}
-
-char	**init_envp(char **envp){
-	int len = arraylen(envp);
-	char **new_env = malloc(sizeof(char *) * (len + 1));
-	int i = 0;
+	i = 0;
+	len = arraylen(envp);
+	new_env = malloc(sizeof(char *) * (len + 1));
 	if (!new_env)
 	{
 		perror("malloc failed in copy_environment");
@@ -55,10 +49,7 @@ char	**init_envp(char **envp){
 	{
 		new_env[i] = ft_strdup(envp[i]);
 		if (!new_env[i])
-		{
-			//free_env_array(new_env, i);
 			exit(1);
-		}
 		i++;
 	}
 	new_env[i] = NULL;
@@ -72,7 +63,6 @@ void	init_heredoc(t_heart *heart)
 
 void	init_stdin_stdout(t_heart *heart)
 {
-
 	heart->stdin_backup = dup(STDIN_FILENO);
 	heart->stdout_backup = dup(STDOUT_FILENO);
 	if (heart->stdin_backup == -1)
@@ -88,17 +78,12 @@ void	init_stdin_stdout(t_heart *heart)
 	}
 }
 
-/*Alloca memoria per una lista di comandi che l’utente ha digitato.
-Inizializza ogni comando per evitare comportamenti indefiniti.
-Prepara la shell a riempire questi comandi successivamente durante il parsing dell’input.*/
-
 void	init_comand(t_heart *heart, int num_commands)
 {
-	int i;
+	int	i;
 
 	heart->num_comds = num_commands;
 	heart->comds = malloc(sizeof(t_comand) * num_commands);
-
 	if (!heart->comds)
 	{
 		write (2, "malloc failed", 13);

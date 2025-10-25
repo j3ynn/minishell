@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_helpers.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/25 17:43:49 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/10/25 17:46:53 by jbellucc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-// Cerca la variabile PATH dentro envp
 static char	*find_path_env(char **envp)
 {
 	int	i;
@@ -15,7 +26,6 @@ static char	*find_path_env(char **envp)
 	return (NULL);
 }
 
-// Costruisce il path completo e verifica se è eseguibile
 static char	*check_path(char *dir, char *cmd)
 {
 	char	*tmp;
@@ -34,30 +44,11 @@ static char	*check_path(char *dir, char *cmd)
 	return (NULL);
 }
 
-// Restituisce il path assoluto di un comando (es. "ls" -> "/bin/ls")
-char	*get_path(char *cmd, char **envp)
+static char	*get_path2(char **paths, char *cmd)
 {
-	char	**paths;
-	char	*path_env;
 	char	*full_path;
 	int		i;
-	
-	// Caso 1: contiene '/' → è un percorso (assoluto o relativo)
-	if (ft_strchr(cmd, '/'))
-	{
-		if (access(cmd, X_OK) == 0)
-			return (ft_strdup(cmd));  // restituisci una copia
-		else
-			return (NULL);            // non eseguibile / non trovato
-	}
 
-	// Caso 2: nessuno slash → cerca in PATH
-	path_env = find_path_env(envp);
-	if (!path_env)
-		return (NULL);
-	paths = ft_split(path_env, ':');
-	if (!paths)
-		return (NULL);
 	i = 0;
 	while (paths[i])
 	{
@@ -73,12 +64,35 @@ char	*get_path(char *cmd, char **envp)
 	return (NULL);
 }
 
-int wait_all(pid_t *pids, int n)
+char	*get_path(char *cmd, char **envp)
 {
-	int i;
-	int status;
-	int exit_code = 0;
+	char	**paths;
+	char	*path_env;
+
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+		else
+			return (NULL);
+	}
+	path_env = find_path_env(envp);
+	if (!path_env)
+		return (NULL);
+	paths = ft_split(path_env, ':');
+	if (!paths)
+		return (NULL);
+	return (get_path2(paths, cmd));
+}
+
+int	wait_all(pid_t *pids, int n)
+{
+	int	i;
+	int	status;
+	int	exit_code;
+
 	i = 0;
+	exit_code = 0;
 	while (i < n)
 	{
 		waitpid(pids[i], &status, 0);
@@ -88,5 +102,5 @@ int wait_all(pid_t *pids, int n)
 			exit_code = 128 + WTERMSIG(status);
 		i++;
 	}
-	return exit_code; // restituisce l'exit code dell'ultimo processo
+	return (exit_code);
 }

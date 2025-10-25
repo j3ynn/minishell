@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   buitins.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbellucc <jbellucc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/25 17:28:24 by jbellucc          #+#    #+#             */
+/*   Updated: 2025/10/25 17:42:37 by jbellucc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	is_parent_builtin(const char *cmd)
@@ -15,6 +27,21 @@ int	is_parent_builtin(const char *cmd)
 	return (0);
 }
 
+static void	run_builtin_parent2(t_comand *cmd, t_heart *heart, int is_export)
+{
+	int	i;
+
+	i = 1;
+	while (cmd->args[i])
+	{
+		if (is_export)
+			heart->env = export_env_var(heart->env, cmd->args[i], heart);
+		else
+			heart->env = unset_env_var(heart->env, cmd->args[i], heart);
+		i++;
+	}
+}
+
 void	run_builtin_parent(t_comand *cmd, t_heart *heart)
 {
 	if (!cmd || !cmd->comd)
@@ -26,24 +53,10 @@ void	run_builtin_parent(t_comand *cmd, t_heart *heart)
 		else if (chdir(cmd->args[1]) == -1)
 			perror("minishell: cd");
 	}
-	else if(!ft_strcmp(cmd->comd, "unset"))
-	{
-		int i = 1;
-		while (cmd->args[i])
-		{
-			heart->env = unset_env_var(heart->env, cmd->args[i], heart);
-			i++;
-		}
-	}
-	else if(!ft_strcmp(cmd->comd, "export"))
-	{
-		int i = 0;
-		while (cmd->args[i])
-		{
-			heart->env = export_env_var(heart->env, cmd->args[i], heart);
-			i++;
-		}
-	}
+	else if (!ft_strcmp(cmd->comd, "unset"))
+		run_builtin_parent2(cmd, heart, 0);
+	else if (!ft_strcmp(cmd->comd, "export"))
+		run_builtin_parent2(cmd, heart, 1);
 	else if (!ft_strcmp(cmd->comd, "exit"))
 	{
 		free_all(heart);
@@ -62,57 +75,4 @@ int	is_child_builtin(const char *cmd)
 	if (!ft_strcmp(cmd, "env"))
 		return (1);
 	return (0);
-}
-
-void	run_builtin_child(t_comand *cmd, t_heart *heart)
-{
-	int	i;
-
-	if (!ft_strcmp(cmd->comd, "echo"))
-	{
-		int newline = 1;
-		i = 1;
-
-		// Gestione opzione -n (anche -nnn…)
-		while (cmd->args[i] && cmd->args[i][0] == '-'
-				 && cmd->args[i][1] == 'n')
-		{
-			int j = 1;
-			while (cmd->args[i][j] == 'n')
-				j++;
-			if (cmd->args[i][j] != '\0')
-				break; // non è un vero -n, es: "-nx"
-			newline = 0;
-			i++;
-		}
-
-		// Stampa gli argomenti rimanenti
-		while (cmd->args[i])
-		{
-			printf("%s", cmd->args[i]);
-			if (cmd->args[i + 1])
-				printf(" ");
-			i++;
-		}
-		if (newline)
-			printf("\n");
-		exit(0);
-	}
-	else if (!ft_strcmp(cmd->comd, "pwd"))
-	{
-		char cwd[1024];
-		if (getcwd(cwd, sizeof(cwd)))
-			printf("%s\n", cwd);
-		exit(0);
-	}
-	else if (!ft_strcmp(cmd->comd, "env"))
-	{
-		i = 0;
-		while (heart->env[i])
-		{
-			printf("%s\n", heart->env[i]);
-			i++;
-		}
-		exit(0);
-	}
 }
